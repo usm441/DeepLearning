@@ -121,7 +121,7 @@ if __name__ == '__main__':
         sess.run(init)
         x_plot = []
         y_plot = []
-        for i in range(200):
+        for i in range(1000):
             batch_xs, batch_ys = data.train.next_batch(64)
             sess.run(train_step, feed_dict={xs: batch_xs, learning_rate: rate, keep_prob: 0.5})
             if i%50 == 0:
