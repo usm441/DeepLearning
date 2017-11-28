@@ -5,12 +5,8 @@ from tensorflow.examples.tutorials.mnist import input_data
 import matplotlib.pyplot as plt
 
 
-def compute_accuracy(sess, validation_xs):
-    global output
-    gen_img = sess.run(output, feed_dict={xs: validation_xs, keep_prob:1})
-    correct_prediction = tf.equal(gen_img, validation_xs)
-    accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-    result = sess.run(accuracy, feed_dict={xs: validation_xs, keep_prob:1})
+def compute_loss(sess, validation_xs):
+    result = sess.run(loss, feed_dict={xs: validation_xs})
     return result
 
 
@@ -85,7 +81,7 @@ if __name__ == '__main__':
     images = data.validation.images[0:9]
     cls_true = data_class[0:9]
 
-    # # define placeholder for inputs to network
+    # define placeholder for inputs to network
     learning_rate = tf.placeholder(tf.float32)
     xs = tf.placeholder(tf.float32, [None, 784])
     x_image = tf.reshape(xs, [-1, 28, 28, 1])
@@ -121,20 +117,20 @@ if __name__ == '__main__':
         sess.run(init)
         x_plot = []
         y_plot = []
-        for i in range(1000):
+        for i in range(800):
             batch_xs, batch_ys = data.train.next_batch(64)
             sess.run(train_step, feed_dict={xs: batch_xs, learning_rate: rate, keep_prob: 0.5})
             if i%50 == 0:
                 print("Step: ", i)
-                accuracy = compute_accuracy(sess, data.validation.images)
-                print("Validation accuracy: ", accuracy)
+                computed_loss = compute_loss(sess, data.validation.images)
+                print("Validation loss: ", computed_loss)
                 x_plot.append(i)
-                y_plot.append(accuracy)
+                y_plot.append(computed_loss)
         plt.plot(x_plot, y_plot, label=rate)
         gen_imgs.append(sess.run(output, feed_dict={xs: data.validation.images[0:9], keep_prob: 1}))
         sess.close()
-    plt.xlabel('epochs')
-    plt.ylabel('accuracy')
+    plt.xlabel('steps')
+    plt.ylabel('loss')
     plt.legend(loc='lower right')
     plt.show()
 
