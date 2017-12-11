@@ -132,13 +132,10 @@ def train_and_plot():
             validation_accuracy = get_accuracy(y_prediction, valid_labels)
             print("Validation accuracy: ", validation_accuracy)
 
-            # utils.write_to_file('epochs', str(i))
             x_plot.append(i)
 
-            # utils.write_to_file('validation_accuracy', str(validation_accuracy))
             y_plot_validation.append(validation_accuracy)
-
-            # utils.write_to_file('training_Accuracy', str(training_accuracy))
+            
             y_plot_train.append(training_accuracy)
 
     plt.plot(x_plot, y_plot_validation, label='validation')
