@@ -52,29 +52,32 @@ def runtime(x, epoch=40):
 
 
 def random_optimize(bounds, times=10, iterations=50):
-    x_plot = []
-    y_plot = []
+    x_plot = range(1, 51)
     D = len(bounds)
-    best_y = 99.0
-    best_x = [None] * D
+    best_y = [[1]]*times
+    best_x = [None]*times
     for j in range(times):
         sum_y = 0
-        x_plot.append(j)
         for i in range(iterations):
             new_x = [random.randint(bounds[d][0], bounds[d][1]) for d in range(D)]
             new_y = objective_function(new_x)
-            if new_y < best_y:
-                best_y = new_y
-                best_x = new_x
-            sum_y = best_y + sum_y
-        y_plot.append(sum_y / iterations)
-    plt.plot(x_plot, y_plot, label="abc")
+            if new_y < best_y[j][len(best_y[j])-1]:
+                best_y_temp = new_y
+                best_x[j] = new_x
+            best_y[j].append(best_y_temp)
+    avg_y = []
+    for i in range(1,51):
+        sum = 0
+        for j in range(10):
+            sum = sum + best_y[j][i]
+        avg_y.append(sum/10)
+
+    plt.plot(x_plot,avg_y , label="abc")
     plt.xlabel('steps')
     plt.ylabel('loss')
     plt.legend(loc='lower right')
     plt.show()
 
-    return {'best_x': best_x, 'best_y': best_y}
 
 
 bounds = [[-6, 1], [32, 512], [16, 1024], [16, 1024], [16, 1024]]
